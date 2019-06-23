@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Talent manager</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+		     #cp {
+              left: 50%;
+              margin: 0 auto;
+			  margin-top:15px;
+			  text-align: center;
+            }
+			.line{
+				height: 142px;
+				width: 100%;
+				text-align: center;
+				margin-top: 15px;
+			}
+			.element {
+				position: relative;
+				display: inline-block;
+				width: 49%;
+			}
+			.input{ 
+				width: 30px;
+			}
+			.block{
+				vertical-align: top;
+				display: inline-block;
+				width: 31%;
+				text-align: center;
+				border: 1px solid black;
+				border-radius: 20px;
+				margin:10px;
+				margin-top: -50px;
+				background-color: rgba(0,0,0,0.4);
+				padding-bottom:15px;
+			}
+			tr:nth-child(even) {background-color: #f2f2f2; opacity: 0.8;}
+			tr:nth-child(odd) {background-color: #464646; opacity: 0.8;}
+			
+			td:nth-child(even) {text-align:right;}
+
+		</style>
+		
+		
+	</head>
+	<body style = "background-image: url(images/got.jpg);background-repeat: no-repeat;background-attachment: fixed;font-weight: bold;color:white;background-size:cover;">
+		<script>
+			var objects = [
+					{name:"Army Attack I" , type: "Army Attack", points: 0 , max : 5 , req : null , req_n : null , values : [0.4,0.8,1.5,2.5,5]},
+					{name:"Cavalry Attack I" , type: "Cavalry Attack", points: 0 , max : 15 , req : "Army Attack I" , req_n : 2 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,5,7]},
+					{name:"Fortification Construction I" , type: "Fortification Construction", points: 0 , max : 15 , req : "Cavalry Attack I" , req_n : 3 , values : [0.5,1,1.5,2,3,4,5,6,7.5,9,10.5,12,16,20,30]},
+					{name:"Spearmen Attack I" , type: "Spearmen Attack", points: 0 , max : 15 , req : "Cavalry Attack I" , req_n : 3 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,5,7]},
+					{name:"Troop Training Speed I" , type: "Training Speed", points: 0 , max : 15 , req : "Fortification Construction I" , req_n : 3 , values : [0.5,1,1.5,2,3,4,5,6,7.5,9,10.5,12,14,17,20]},
+					{name:"Infantry Attack I" , type: "Infantry Attack", points: 0 , max : 15 , req : "Spearmen Attack I" , req_n : 3 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,5,7]},
+					{name:"Bowmen Attack I" , type: "Bowmen Attack", points: 0 , max : 15 , req : "Infantry Attack I" , req_n : 3 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,5,7]},
+					{name:"Army Defense I" , type: "Army Defense", points: 0 , max : 15 , req : "Infantry Attack I" , req_n : 3 , values : [0.25,0.5,0.75,1,1.5,2,2.5,3,3.75,4.5,5.25,6,7,8,13]},
+					{name:"Fortifications Attack I" , type: "Fortification Attack", points: 0 , max : 15 , req : "Army Defense I" , req_n : 3 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,5,7]},
+					{name:"Army Health I" , type: "Army Health", points: 0 , max : 15 , req : "Army Defense I" , req_n : 3 , values : [0.25,0.5,0.75,1,1.5,2,2.5,3,3.75,4.5,5.25,6,7,8,13]},
+					{name:"Bowmen Attack II" , type: "Bowmen Attack", points: 0 , max : 20 , req : "Spearmen Attack II" , req_n : 5 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,4.8,5.4,6,6.75,7.5,8.25,10]},
+					{name:"Spearmen Attack II" , type: "Spearmen Attack", points: 0 , max : 20 , req : "Army Health I" , req_n : 3 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,4.8,5.4,6,6.75,7.5,8.25,10]},
+					{name:"Infantry Attack II" , type: "Infantry Attack", points: 0 , max : 20 , req : "Spearmen Attack II" , req_n : 5 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,4.8,5.4,6,6.75,7.5,8.25,10]},
+					{name:"Defense Plan II" , type: "Fortification Construction", points: 0 , max : 35 , req : "Infantry Attack II" , req_n : 5 , values : [0.5,1,1.5,2,3,4,5,6,7.5,9,10.5,12,14,16,18,20,22.5,25,27.5,30,33,36,39,42,45,5,49,52.5,56,60,64,68,72,77,82,92]},
+					{name:"Cavalry Attack II" , type: "Cavalry Attack", points: 0 , max : 20 , req : "Infantry Attack II" , req_n : 5 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,4.8,5.4,6,6.75,7.5,8.25,10]},
+					{name:"Fortifications Attack II" , type: "Fortification Attack", points: 0 , max : 20 , req : "Defense Plan II" , req_n : 5 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,4.8,5.4,6,6.75,7.5,8.25,10]},
+					{name:"Infantry Attack III" , type: "Infantry Attack", points: 0 , max : 50 , req : "Cavalry Attack II" , req_n : 5 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,4.8,5.4,6,6.75,7.5,8.25,9,9.9,10.8,11.7,12.6,13.65,14.7,15.75,16.8,18,19.2,20.4,21.6,22.95,24.3,25.65,27,28.5,30,31.5,33,34.65,36.3,37.95,39.6,41.4,43.2,45,46.8,48.75,53]},
+					{name:"Troop Training Speed II" , type: "Training Speed", points: 0 , max : 35 , req : "Infantry Attack III" , req_n : 5 , values : [0.5,1,1.5,2,3,4,5,6,7.5,9,10.5,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,57,60]},
+					{name:"Cavalry Attack III" , type: "Cavalry Attack", points: 0 , max : 50 , req : "Infantry Attack III" , req_n : 5 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,4.8,5.4,6,6.75,7.5,8.25,9,9.9,10.8,11.7,12.6,13.65,14.7,15.75,16.8,18,19.2,20.4,21.6,22.95,24.3,25.65,27,28.5,30,31.5,33,34.65,36.3,37.95,39.6,41.4,43.2,45,46.8,48.75,53]},
+					{name:"Bowmen Attack III" , type: "Bowmen Attack", points: 0 , max : 50 , req : "Cavalry Attack III" , req_n : 5 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,4.8,5.4,6,6.75,7.5,8.25,9,9.9,10.8,11.7,12.6,13.65,14.7,15.75,16.8,18,19.2,20.4,21.6,22.95,24.3,25.65,27,28.5,30,31.5,33,34.65,36.3,37.95,39.6,41.4,43.2,45,46.8,48.75,53]},
+					{name:"Spearmen Attack III" , type: "Spearmen Attack", points: 0 , max : 50 , req : "Cavalry Attack III" , req_n : 5 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,4.8,5.4,6,6.75,7.5,8.25,9,9.9,10.8,11.7,12.6,13.65,14.7,15.75,16.8,18,19.2,20.4,21.6,22.95,24.3,25.65,27,28.5,30,31.5,33,34.65,36.3,37.95,39.6,41.4,43.2,45,46.8,48.75,53]},
+					{name:"Fortifications Attack III" , type: "Fortification Attack", points: 0 , max : 50 , req : "Spearmen Attack III" , req_n : 5 , values : [0.15,0.3,0.45,0.6,0.9,1.2,1.5,1.8,2.25,2.7,3.15,3.6,4.2,4.8,5.4,6,6.75,7.5,8.25,9,9.9,10.8,11.7,12.6,13.65,14.7,15.75,16.8,18,19.2,20.4,21.6,22.95,24.3,25.65,27,28.5,30,31.5,33,34.65,36.3,37.95,39.6,41.4,43.2,45,46.8,48.75,53]},
+					{name:"Army Health II" , type: "Army Health", points: 0 , max : 50 , req : "Spearmen Attack III" , req_n : 5 , values : [0.25,0.5,0.75,1,1.5,2,2.5,3,3.75,4.5,5.25,6,7,8,9,10,11.25,12.5,13.75,15,16.5,18,19.5,21,22.75,24.5,26.25,28,30,32,34,36,38.25,40.5,42.75,45,47.5,50,52.5,55,57.75,60.5,63.25,66,69,72,75,78,82,87]},
+					{name:"Army Defense II" , type: "Army Defense", points: 0 , max : 50 , req : "Army Health II" , req_n : 5 , values : [0.25,0.5,0.75,1,1.5,2,2.5,3,3.75,4.5,5.25,6,7,8,9,10,11.25,12.5,13.75,15,16.5,18,19.5,21,22.75,24.5,26.25,28,30,32,34,36,38.25,40.5,42.75,45,47.5,50,52.5,55,57.75,60.5,63.25,66,69,72,75,78,82,87]},
+					
+					{name:"Grain Production I" , type: "Grain Production", points: 0 , max : 5 , req : null , req_n : null , values : [1,2,3,4,12]},
+					{name:"Stone Production I" , type: "Stone Production", points: 0 , max : 15 , req : "Grain Production I" , req_n : 2 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,32]},
+					{name:"Wood Production I" , type: "Wood Production", points: 0 , max : 15 , req : "Stone Production I" , req_n : 2 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,32]},
+					{name:"Construction Speed I" , type: "Construction Speed", points: 0 , max : 10 , req : "Stone Production I" , req_n : 2 , values : [1,2,4,6,9,12,16,20,24,30]},
+					{name:"Iron Production I" , type: "Iron Production", points: 0 , max : 15 , req : "Wood Production I" , req_n : 2 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,32]},
+					{name:"Research Speed I" , type: "Research Speed", points: 0 , max : 10 , req : "Construction Speed I" , req_n : 3 , values : [1,2,4,6,9,12,16,20,24,30]},
+					{name:"Grain Production II" , type: "Grain Production", points: 0 , max : 20 , req : "Iron Production I" , req_n : 5 , values : [1,2,3,4,6,8,10,12,15,18,21,24,28,32,36,40,46,52,58,70]},
+					{name:"Gold Production Speed I" , type: "Gold Production", points: 0 , max : 15 , req : "Iron Production I" , req_n : 2 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,32]},
+					{name:"Stone Production II" , type: "Stone Production", points: 0 , max : 20 , req : "Grain Production II" , req_n : 5 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,25.5,23,25.5,28,31,34,37,48]},
+					{name:"Army Carrying Capacity I" , type: "Army Carrying Capacity", points: 0 , max : 15 , req : "Grain Production II" , req_n : 5 , values : [0.5,1,1.5,2,2.75,3.5,4.25,5,6,7,8,9,10.5,12,17]},
+					{name:"Iron Production II" , type: "Iron Production", points: 0 , max : 20 , req : "Stone Production II" , req_n : 5 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,25.5,23,25.5,28,31,34,37,48]},
+					{name:"Gathering Speed I" , type: "Gathering Speed", points: 0 , max : 15 , req : "Army Carrying Capacity I" , req_n : 5 , values : [0.5,1,1.5,2,2.75,3.5,4.25,5,6,7,8,9,10.5,12,17]},
+					{name:"Construction Speed II" , type: "Construction Speed", points: 0 , max : 20 , req : "Iron Production II" , req_n : 5 , values : [1,2,3,4,6,8,10,12,15,18,21,24,27,30,33,36,40,45,50,55]},
+					{name:"Wood Production II" , type: "Wood Production", points: 0 , max : 20 , req : "Iron Production II" , req_n : 5 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,25.5,23,25.5,28,31,34,37,48]},
+					{name:"Research Speed II" , type: "Research Speed", points: 0 , max : 20 , req : "Construction Speed II" , req_n : 5 , values : [1,2,3,4,6,8,10,12,15,18,21,24,27,30,33,36,40,45,50,55]},
+					{name:"Gold Production Speed II" , type: "Gold Production", points: 0 , max : 20 , req : "Wood Production II" , req_n : 5 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,25.5,23,25.5,28,31,34,37,48]},
+					{name:"Gathering Speed II" , type: "Gathering Speed", points: 0 , max : 50 , req : "Research Speed II" , req_n : 5 , values : [0.5,1,1.5,2,2.75,3.5,4.25,5,6,7,8,9,10.25,11.5,12.75,14,15.5,17,18.5,20,21.75,23.5,25.25,27,29,31,33,35,37.25,39.5,41.75,44,46.5,49,51.5,54,56.75,59.5,62.25,65,68,71,74,77,80.25,83.5,86.75,90,93.5,100]},
+					{name:"Grain Production III" , type: "Grain Production", points: 0 , max : 50 , req : "Gathering Speed II" , req_n : 5 , values : [1,2,3,4,6,8,10,12,15,18,21,24,28,32,36,40,46,52,58,64,72,80,88,96,106,116,126,136,148,160,172,184,198,212,226,240,256,272,288,304,322,340,358,376,396,416,436,456,478,518]},
+					{name:"Army Carrying Capacity II" , type: "Army Carrying Capacity", points: 0 , max : 50 , req : "Gathering Speed II" , req_n : 5 , values : [0.5,1,1.5,2,2.75,3.5,4.25,5,6,7,8,9,10.25,11.5,12.75,14,15.5,17,18.5,20,21.75,23.5,25.25,27,29,31,33,35,37.25,39.5,41.75,44,46.5,49,51.5,54,56.75,59.5,62.25,65,68,71,74,77,80.25,83.5,86.75,90,93.5,100]},
+					{name:"Wood Production III" , type: "Wood Production", points: 0 , max : 50 , req : "Grain Production III" , req_n : 5 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,25.5,28,31,34,37,40,44,48,52,56,61,66,71,76,82,88,94,100,107,114,121,128,136,144,152,160,170,180,190,200,212,224,236,248,262,288]},
+					{name:"Stone Production III" , type: "Stone Production", points: 0 , max : 50 , req : "Wood Production III" , req_n : 5 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,25.5,28,31,34,37,40,44,48,52,56,61,66,71,76,82,88,94,100,107,114,121,128,136,144,152,160,170,180,190,200,212,224,236,248,262,288]},
+					{name:"Iron Production III" , type: "Iron Production", points: 0 , max : 50 , req : "Wood Production III" , req_n : 5 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,25.5,28,31,34,37,40,44,48,52,56,61,66,71,76,82,88,94,100,107,114,121,128,136,144,152,160,170,180,190,200,212,224,236,248,262,288]},
+					{name:"Gold Production Speed III" , type: "Gold Production", points: 0 , max : 50 , req : "Iron Production III" , req_n : 5 , values : [1,2,3,4,5.5,7,8.5,10,12,14,16,18,20.5,23,25.5,28,31,34,37,40,44,48,52,56,61,66,71,76,82,88,94,100,107,114,121,128,136,144,152,160,170,180,190,200,212,224,236,248,262,288]}
+				];
+		
+			function find (id){
+				var i;
+				for (i = 0 ; i < objects.length ; i++){
+					if (objects[i].name.localeCompare(id) == 0){
+						return i;
+					}
+				}
+			}
+			
+			function minPath (id){
+				var node = find(id);
+				var require = find(objects[node].req);
+				
+				if (typeof require == 'undefined'){
+					return;
+				}
+				else if (objects[require].points < objects[node].req_n){
+					minPath (objects[require].name);
+					objects[require].points = objects[node].req_n;
+					document.getElementById(objects[require].name).innerHTML = "<b>"+objects[require].points + " / " + objects[require].max+"</b>";
+				}else{
+					return;
+				}
+			}
+			
+			function inc (n , id){
+				var j;
+				var k;
+				document.getElementById("result").innerHTML = "";
+				document.getElementById("result").style.visibility = "hidden";
+				for (j = 0 ; j < objects.length ; j++){
+					if (objects[j].name.localeCompare(id) == 0){
+						if (objects[j].req != null){
+							for (k = 0 ; k < objects.length ; k++){
+								if (objects[k].name.localeCompare(objects[j].req) == 0){
+									if (objects[k].points >= objects[j].req_n){
+										if (objects[j].points + n > objects[j].max){
+											objects[j].points = objects[j].max;
+										}else{
+											objects[j].points = objects[j].points + n;
+										}
+										document.getElementById(objects[j].name).innerHTML = "<b>"+objects[j].points + " / " + objects[j].max+"</b>";
+									}else{
+										minPath(id);
+										
+										document.getElementById("result").innerHTML = "Minimum required points was added to previous talents to access "+objects[j].name;
+										document.getElementById("result").style.color = "black";
+										document.getElementById("result").style.backgroundColor = "green";
+										document.getElementById("result").style.visibility = "visible";
+										
+										if (objects[j].points + n > objects[j].max){
+											objects[j].points = objects[j].max;
+										}else{
+											objects[j].points = objects[j].points + n;
+										}
+										document.getElementById(objects[j].name).innerHTML = "<b>"+objects[j].points + " / " + objects[j].max+"</b>";
+										
+									}
+								}
+							}
+						}else{
+							if (objects[j].points + n > objects[j].max){
+								objects[j].points = objects[j].max;
+							}else{
+								objects[j].points = objects[j].points + n;
+							}
+							document.getElementById(objects[j].name).innerHTML = "<b>"+objects[j].points + " / " + objects[j].max+"</b>";
+						}
+					}
+				}
+				
+				var number;
+				var points1;
+				var l;
+				for (l = 0 ; l < objects.length ; l++){
+					document.getElementById(objects[l].type).innerHTML = "0";
+				}
+				
+				document.getElementById("Total points").innerHTML = "0";
+				for (l = 0 ; l < objects.length ; l++){
+					number = document.getElementById(objects[l].type).innerHTML;
+					points1 = document.getElementById("Total points").innerHTML;
+					if (Number(objects[l].points) > 0){
+						document.getElementById(objects[l].type).innerHTML = Number(number) + objects[l].values[Number(objects[l].points)-1];
+						document.getElementById("Total points").innerHTML = Number(points1) + Number(objects[l].points);
+					}
+				}
+				update_color();
+			}
+			
+			function dec (n , id){
+				var j;
+				var k;
+				var done = 0;
+				document.getElementById("result").innerHTML = "";
+				document.getElementById("result").style.visibility = "hidden";
+				for (j = 0 ; j < objects.length ; j++){
+					if (objects[j].name.localeCompare(id) == 0){
+						for (k = 0 ; k < objects.length ; k++){
+							if (objects[k].req != null){
+								if (objects[k].req.localeCompare(objects[j].name) == 0 && objects[k].points > 0){
+									if ((objects[j].points - n) >= objects[k].req_n){
+										objects[j].points = objects[j].points - n;
+									}else{
+										objects[j].points = objects[k].req_n;
+										document.getElementById("result").innerHTML = "You need atleast " + objects[k].req_n + " points in " + objects[j].name + " because of "+ objects[k].name;
+										document.getElementById("result").style.color = "black";
+										document.getElementById("result").style.backgroundColor = "red";
+										document.getElementById("result").style.visibility = "visible";
+									}
+									done = 1;
+								}
+							}
+							
+							
+						}
+						if (done == 0){
+							if (objects[j].points - n < 0){
+								objects[j].points = 0;
+							}else{
+								objects[j].points = objects[j].points - n;
+							}
+						}
+						document.getElementById(objects[j].name).innerHTML = "<b>"+objects[j].points + " / " + objects[j].max+"</b>";
+					}
+				}
+				
+				var number;
+				var points1;
+				var l;
+				for (l = 0 ; l < objects.length ; l++){
+					document.getElementById(objects[l].type).innerHTML = "0";
+				}
+				
+				document.getElementById("Total points").innerHTML = "0";
+				for (l = 0 ; l < objects.length ; l++){
+					number = document.getElementById(objects[l].type).innerHTML;
+					points1 = document.getElementById("Total points").innerHTML;
+					if (Number(objects[l].points) > 0){
+						document.getElementById(objects[l].type).innerHTML = Number(number) + objects[l].values[Number(objects[l].points)-1];
+						document.getElementById("Total points").innerHTML = Number(points1) + Number(objects[l].points);
+					}
+				}
+				update_color();
+			}
+			
+			function clear_points(){
+				var i;
+				for (i = 0 ; i < objects.length ; i++){
+					objects[i].points = 0;
+				}
+				var number;
+				var points1;
+				var l;
+				for (l = 0 ; l < objects.length ; l++){
+					document.getElementById(objects[l].type).innerHTML = "0";
+					document.getElementById(objects[l].name).innerHTML = "<b>0 / " + objects[l].max+"</b>";
+				}
+				document.getElementById("Total points").innerHTML = "0";
+				for (l = 0 ; l < objects.length ; l++){
+					number = document.getElementById(objects[l].type).innerHTML;
+					points1 = document.getElementById("Total points").innerHTML;
+					if (Number(objects[l].points) > 0){
+						document.getElementById(objects[l].type).innerHTML = 0;
+						document.getElementById("Total points").innerHTML = 0;
+					}
+				}
+				update_color();
+			}
+			
+			function update_color(){
+				var i;
+				for (i = 0 ; i < objects.length ; i++){
+					if (objects[i].req == null){
+						document.getElementById(objects[i].name).style.color = "#1DF106";
+					}else{
+						if (objects[find(objects[i].req)].points >= objects[i].req_n){
+							document.getElementById(objects[i].name).style.color = "#1DF106";
+						}else{
+							document.getElementById(objects[i].name).style.color = "red";
+						}
+					}
+				}
+			}
+			
+			window.onload = function(){
+				var list = ["Army Attack I","Cavalry Attack I","Fortification Construction I","Spearmen Attack I","Troop Training Speed I","Infantry Attack I","Bowmen Attack I","Army Defense I","Fortifications Attack I","Army Health I","Bowmen Attack II","Spearmen Attack II","Infantry Attack II","Defense Plan II","Cavalry Attack II","Fortifications Attack II","Infantry Attack III","Troop Training Speed II","Cavalry Attack III","Bowmen Attack III","Spearmen Attack III","Fortifications Attack III","Army Health II","Army Defense II"]
+				var m;
+				
+				for (m = 0 ; m < objects.length ; m++){
+					document.getElementById(objects[m].name).innerHTML = "<b>"+objects[m].points + " / " + objects[m].max+"</b>";
+					document.getElementById(objects[m].name).style.backgroundColor = "rgba(0,0,0,0.9)";
+					if (objects[m].req == null){
+						document.getElementById(objects[m].name).style.color = "#1DF106";
+					}else{
+						document.getElementById(objects[m].name).style.color = "red";
+					}	
+				} 			
+			}
+		</script>
+		
+		<div class = "line" id="result" style = "z-index:20;text-align:center;margin:auto;width:100%;height:20px;position:fixed;left:%;border: 1px solid black;visibility:hidden;border-radius: 20px;background-color: rgba(0,0,0,0.4);"></div>
+		<div class = "block" style = "margin-top:20px;">
+			<div class = "line">
+				<div class = "element" id = "1">
+					<div><img src = "images/armya.png" width = 70 height = 70><br>Army Attack I</div>
+					<div>
+						<button onclick = 'dec(10 , "Army Attack I")'>-10</button>
+						<button onclick = 'dec(1 , "Army Attack I")'>-</button>
+						<span id = "Army Attack I">0</span>
+						<button onclick = 'inc(1 , "Army Attack I")'>+</button>
+						<button onclick = 'inc(10 , "Army Attack I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line" id = "2">
+				<div class = "element">
+					<img src = "images/cava.png" width = 70 height = 70><br>
+					Cavalry Attack I
+					<div>
+						<button onclick = 'dec(10 , "Cavalry Attack I")'>-10</button>
+						<button onclick = 'dec(1 , "Cavalry Attack I")'>-</button>
+						<span id = "Cavalry Attack I">0</span>
+						<button onclick = 'inc(1 , "Cavalry Attack I")'>+</button>
+						<button onclick = 'inc(10 , "Cavalry Attack I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line" id = "3">
+				<div class = "element">
+					<img src = "images/fortc.png" width = 70 height = 70><br>
+					Fortification Construction I
+					<div>
+						<button onclick = 'dec(10 , "Fortification Construction I")'>-10</button>
+						<button onclick = 'dec(1 , "Fortification Construction I")'>-</button>
+						<span id = "Fortification Construction I">0</span>
+						<button onclick = 'inc(1 , "Fortification Construction I")'>+</button>
+						<button onclick = 'inc(10 , "Fortification Construction I")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "4">
+					<img src = "images/speara.png" width = 70 height = 70><br>
+					Spearmen Attack I
+					<div>
+						<button onclick = 'dec(10 , "Spearmen Attack I")'>-10</button>
+						<button onclick = 'dec(1 , "Spearmen Attack I")'>-</button>
+						<span id = "Spearmen Attack I">0</span>
+						<button onclick = 'inc(1 , "Spearmen Attack I")'>+</button>
+						<button onclick = 'inc(10 , "Spearmen Attack I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "5">
+					<img src = "images/train.png" width = 70 height = 70><br>
+					Troop Training Speed I
+					<div>
+						<button onclick = 'dec(10 , "Troop Training Speed I")'>-10</button>
+						<button onclick = 'dec(1 , "Troop Training Speed I")'>-</button>
+						<span id = "Troop Training Speed I">0</span>
+						<button onclick = 'inc(1 , "Troop Training Speed I")'>+</button>
+						<button onclick = 'inc(10 , "Troop Training Speed I")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "6">
+					<img src = "images/infa.png" width = 70 height = 70><br>
+					Infantry Attack I
+					<div>
+						<button onclick = 'dec(10 , "Infantry Attack I")'>-10</button>
+						<button onclick = 'dec(1 , "Infantry Attack I")'>-</button>
+						<span id = "Infantry Attack I">0</span>
+						<button onclick = 'inc(1 , "Infantry Attack I")'>+</button>
+						<button onclick = 'inc(10 , "Infantry Attack I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "7">
+					<img src = "images/bow.png" width = 70 height = 70><br>
+					Bowmen Attack I
+					<div>
+						<button onclick = 'dec(10 , "Bowmen Attack I")'>-10</button>
+						<button onclick = 'dec(1 , "Bowmen Attack I")'>-</button>
+						<span id = "Bowmen Attack I">0</span>
+						<button onclick = 'inc(1 , "Bowmen Attack I")'>+</button>
+						<button onclick = 'inc(10 , "Bowmen Attack I")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "8">
+					<img src = "images/armya.png" width = 70 height = 70><br>
+					Army Defense I
+					<div>
+						<button onclick = 'dec(10 , "Army Defense I")'>-10</button>
+						<button onclick = 'dec(1 , "Army Defense I")'>-</button>
+						<span id = "Army Defense I">0</span>
+						<button onclick = 'inc(1 , "Army Defense I")'>+</button>
+						<button onclick = 'inc(10 , "Army Defense I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "9">
+					<img src = "images/forta.png" width = 70 height = 70><br>
+					Fortifications Attack I
+					<div>
+						<button onclick = 'dec(10 , "Fortifications Attack I")'>-10</button>
+						<button onclick = 'dec(1 , "Fortifications Attack I")'>-</button>
+						<span id = "Fortifications Attack I">0</span>
+						<button onclick = 'inc(1 , "Fortifications Attack I")'>+</button>
+						<button onclick = 'inc(10 , "Fortifications Attack I")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "10">
+					<img src = "images/armyh.png" width = 70 height = 70><br>
+					Army Health I
+					<div>
+						<button onclick = 'dec(10 , "Army Health I")'>-10</button>
+						<button onclick = 'dec(1 , "Army Health I")'>-</button>
+						<span id = "Army Health I">0</span>
+						<button onclick = 'inc(1 , "Army Health I")'>+</button>
+						<button onclick = 'inc(10 , "Army Health I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "11">
+					<img src = "images/bow.png" width = 70 height = 70><br>
+					Bowmen Attack II
+					<div>
+						<button onclick = 'dec(10 , "Bowmen Attack II")'>-10</button>
+						<button onclick = 'dec(1 , "Bowmen Attack II")'>-</button>
+						<span id = "Bowmen Attack II">0</span>
+						<button onclick = 'inc(1 , "Bowmen Attack II")'>+</button>
+						<button onclick = 'inc(10 , "Bowmen Attack II")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "12">
+					<img src = "images/speara.png" width = 70 height = 70><br>
+					Spearmen Attack II
+					<div>
+						<button onclick = 'dec(10 , "Spearmen Attack II")'>-10</button>
+						<button onclick = 'dec(1 , "Spearmen Attack II")'>-</button>
+						<span id = "Spearmen Attack II">0</span>
+						<button onclick = 'inc(1 , "Spearmen Attack II")'>+</button>
+						<button onclick = 'inc(10 , "Spearmen Attack II")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "empty">
+				
+				</div>
+				<div class = "element" id = "13">
+					<img src = "images/infa.png" width = 70 height = 70><br>
+					Infantry Attack II
+					<div>
+						<button onclick = 'dec(10 , "Infantry Attack II")'>-10</button>
+						<button onclick = 'dec(1 , "Infantry Attack II")'>-</button>
+						<span id = "Infantry Attack II">0</span>
+						<button onclick = 'inc(1 , "Infantry Attack II")'>+</button>
+						<button onclick = 'inc(10 , "Infantry Attack II")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "14">
+					<img src = "images/fortc.png" width = 70 height = 70><br>
+					Defense Plan II
+					<div>
+						<button onclick = 'dec(10 , "Defense Plan II")'>-10</button>
+						<button onclick = 'dec(1 , "Defense Plan II")'>-</button>
+						<span id = "Defense Plan II">0</span>
+						<button onclick = 'inc(1 , "Defense Plan II")'>+</button>
+						<button onclick = 'inc(10 , "Defense Plan II")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "15">
+					<img src = "images/cava.png" width = 70 height = 70><br>
+					Cavalry Attack II
+					<div>
+						<button onclick = 'dec(10 , "Cavalry Attack II")'>-10</button>
+						<button onclick = 'dec(1 , "Cavalry Attack II")'>-</button>
+						<span id = "Cavalry Attack II">0</span>
+						<button onclick = 'inc(1 , "Cavalry Attack II")'>+</button>
+						<button onclick = 'inc(10 , "Cavalry Attack II")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "16">
+					<img src = "images/forta.png" width = 70 height = 70><br>
+					Fortifications Attack II
+					<div>
+						<button onclick = 'dec(10 , "Fortifications Attack II")'>-10</button>
+						<button onclick = 'dec(1 , "Fortifications Attack II")'>-</button>
+						<span id = "Fortifications Attack II">0</span>
+						<button onclick = 'inc(1 , "Fortifications Attack II")'>+</button>
+						<button onclick = 'inc(10 , "Fortifications Attack II")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "17">
+					<img src = "images/infa.png" width = 70 height = 70><br>
+					Infantry Attack III
+					<div>
+						<button onclick = 'dec(10 , "Infantry Attack III")'>-10</button>
+						<button onclick = 'dec(1 , "Infantry Attack III")'>-</button>
+						<span id = "Infantry Attack III">0</span>
+						<button onclick = 'inc(1 , "Infantry Attack III")'>+</button>
+						<button onclick = 'inc(10 , "Infantry Attack III")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "18">
+					<img src = "images/train.png" width = 70 height = 70><br>
+					Troop Training Speed II
+					<div>
+						<button onclick = 'dec(10 , "Troop Training Speed II")'>-10</button>
+						<button onclick = 'dec(1 , "Troop Training Speed II")'>-</button>
+						<span id = "Troop Training Speed II">0</span>
+						<button onclick = 'inc(1 , "Troop Training Speed II")'>+</button>
+						<button onclick = 'inc(10 , "Troop Training Speed II")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "19">
+					<img src = "images/cava.png" width = 70 height = 70><br>
+					Cavalry Attack III
+					<div>
+						<button onclick = 'dec(10 , "Cavalry Attack III")'>-10</button>
+						<button onclick = 'dec(1 , "Cavalry Attack III")'>-</button>
+						<span id = "Cavalry Attack III">0</span>
+						<button onclick = 'inc(1 , "Cavalry Attack III")'>+</button>
+						<button onclick = 'inc(10 , "Cavalry Attack III")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "20">
+					<img src = "images/bow.png" width = 70 height = 70><br>
+					Bowmen Attack III
+					<div>
+						<button onclick = 'dec(10 , "Bowmen Attack III")'>-10</button>
+						<button onclick = 'dec(1 , "Bowmen Attack III")'>-</button>
+						<span id = "Bowmen Attack III">0</span>
+						<button onclick = 'inc(1 , "Bowmen Attack III")'>+</button>
+						<button onclick = 'inc(10 , "Bowmen Attack III")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "21">
+					<img src = "images/speara.png" width = 70 height = 70><br>
+					Spearmen Attack III
+					<div>
+						<button onclick = 'dec(10 , "Spearmen Attack III")'>-10</button>
+						<button onclick = 'dec(1 , "Spearmen Attack III")'>-</button>
+						<span id = "Spearmen Attack III">0</span>
+						<button onclick = 'inc(1 , "Spearmen Attack III")'>+</button>
+						<button onclick = 'inc(10 , "Spearmen Attack III")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "22">
+					<img src = "images/forta.png" width = 70 height = 70><br>
+					Fortifications Attack III
+					<div>
+						<button onclick = 'dec(10 , "Fortifications Attack III")'>-10</button>
+						<button onclick = 'dec(1 , "Fortifications Attack III")'>-</button>
+						<span id = "Fortifications Attack III">0</span>
+						<button onclick = 'inc(1 , "Fortifications Attack III")'>+</button>
+						<button onclick = 'inc(10 , "Fortifications Attack III")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "23">
+					<img src = "images/armyh.png" width = 70 height = 70><br>
+					Army Health II
+					<div>
+						<button onclick = 'dec(10 , "Army Health II")'>-10</button>
+						<button onclick = 'dec(1 , "Army Health II")'>-</button>
+						<span id = "Army Health II">0</span>
+						<button onclick = 'inc(1 , "Army Health II")'>+</button>
+						<button onclick = 'inc(10 , "Army Health II")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "empty">
+				
+				</div>
+				<div class = "element" id = "24">
+					<img src = "images/armyd.png" width = 70 height = 70><br>
+					Arrmy Defense II
+					<div>
+						<button onclick = 'dec(10 , "Army Defense II")'>-10</button>
+						<button onclick = 'dec(1 , "Army Defense II")'>-</button>
+						<span id = "Army Defense II">0</span>
+						<button onclick = 'inc(1 , "Army Defense II")'>+</button>
+						<button onclick = 'inc(10 , "Army Defense II")'>+10</button>
+					</div>
+				</div>
+			</div>
+		</div>
+<!--------------------------------------------------------------------------------------------------------------------------------------------->	
+		<div class = "block" id = "Summary" style = "padding-bottom:5px;width:28%;position:fixed;left:35.5%;top:80px;">
+			<br>
+			<div>Total points used: <span id = "Total points" value = 0>0</span>&nbsp;&nbsp;<button onclick = 'clear_points()'>Clear</button></div>
+			<br>
+			<table align = center style = "text-align:left;width:95%; top:0%;border:1px solid black;">
+				<tr style = "text-align:center;"><th colspan =2 > Army</th></tr>
+				<tr style = "color:black"><td>Army Attack: </td><td style = "width:25%"><span id = "Army Attack" value = 0>0</span>%</td></tr>
+				<tr><td>Army Defense: </td><td><span id = "Army Defense" value = 0>0</span>%</td></tr>
+				<tr style = "color:black"><td>Army Health: </td><td><span id = "Army Health" value = 0>0</span>%</td></tr>
+				<tr><td>Infantry Attack: </td><td><span id = "Infantry Attack" value = 0>0</span>%</td></tr>
+				<tr style = "color:black"><td>Cavalry Attack: </td><td><span id = "Cavalry Attack" value = 0>0</span>%</td></tr>
+				<tr><td>Spearmen Attack: </td><td><span id = "Spearmen Attack" value = 0>0</span>%</td></tr>
+				<tr style = "color:black"><td>Bowmen Attack: </td><td><span id = "Bowmen Attack" value = 0>0</span>%</td></tr>
+				<tr><td>Fortification Attack: </td><td><span id = "Fortification Attack" value = 0>0</span>%</td></tr>
+				<tr style = "color:black"><td>Training Speed: </td><td><span id = "Training Speed" value = 0>0</span>%</td></tr>
+				<tr><td>Fortification Construction: </td><td><span id = "Fortification Construction" value = 0>0</span>%</td></tr>
+				<tr style = "text-align:center;"><th colspan =2 > </th></tr>
+				<tr style = "text-align:center;"><th colspan =2 > Economy</th></tr>
+				<tr style = "color:black"><td>Wood Production: </td><td><span id = "Wood Production" value = 0>0</span>%</td></tr>
+				<tr><td>Stone Production: </td><td><span id = "Stone Production" value = 0>0</span>%</td></tr>
+				<tr style = "color:black"><td>Iron Production: </td><td><span id = "Iron Production" value = 0>0</span>%</td></tr>
+				<tr><td>Grain Production: </td><td> <span id = "Grain Production" value = 0>0</span>%</td></tr>
+				<tr style = "color:black"><td>Gold Production: </td><td><span id = "Gold Production" value = 0>0</span>%</td></tr>
+				<tr><td>Construction Speed: </td><td><span id = "Construction Speed" value = 0>0</span>%</td></tr>
+				<tr style = "color:black"><td>Research Speed: </td><td><span id = "Research Speed" value = 0>0</span>%</td></tr>
+				<tr><td>Army Carrying Capacity: </td><td><span id = "Army Carrying Capacity" value = 0>0</span>%</td></tr>
+				<tr style = "color:black"><td>Gathering Speed: </td><td><span id = "Gathering Speed" value = 0>0</span>%</td></tr>
+			</table>
+			<div id = "cp"> <span style = "background-color: rgba(0,0,0,0.8);">Created by K6 [FoF]Skvido</span> </div>
+		</div>
+
+	
+		<div align = "right" class = "block" style= "position:absolute; right:0px; margin-top:20px;">
+			<div class = "line">
+				<div class = "element" >
+					<div>
+						<img src = "images/grain.png" width = 70 height = 70><br>
+						Grain Production I</div>
+					<div>
+						<button onclick = 'dec(10 , "Grain Production I")'>-10</button>
+						<button onclick = 'dec(1 , "Grain Production I")'>-</button>
+						<span id = "Grain Production I">0</span>
+						<button onclick = 'inc(1 , "Grain Production I")'>+</button>
+						<button onclick = 'inc(10 , "Grain Production I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element">
+					<img src = "images/stone.png" width = 70 height = 70><br>
+					Stone Production I
+					<div>
+						<button onclick = 'dec(10 , "Stone Production I")'>-10</button>
+						<button onclick = 'dec(1 , "Stone Production I")'>-</button>
+						<span id = "Stone Production I">0</span>
+						<button onclick = 'inc(1 , "Stone Production I")'>+</button>
+						<button onclick = 'inc(10 , "Stone Production I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element">
+					<img src = "images/wood.png" width = 70 height = 70><br>
+					Wood Production I
+					<div>
+						<button onclick = 'dec(10 , "Wood Production I")'>-10</button>
+						<button onclick = 'dec(1 , "Wood Production I")'>-</button>
+						<span id = "Wood Production I">0</span>
+						<button onclick = 'inc(1 , "Wood Production I")'>+</button>
+						<button onclick = 'inc(10 , "Wood Production I")'>+10</button>
+					</div>
+				</div>
+				<div class = "element">
+					<img src = "images/cons.png" width = 70 height = 70><br>
+					Construction Speed I
+					<div>
+						<button onclick = 'dec(10 , "Construction Speed I")'>-10</button>
+						<button onclick = 'dec(1 , "Construction Speed I")'>-</button>
+						<span id = "Construction Speed I">0</span>
+						<button onclick = 'inc(1 , "Construction Speed I")'>+</button>
+						<button onclick = 'inc(10 , "Construction Speed I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element">
+					<img src = "images/iron.png" width = 70 height = 70><br>
+					Iron Production I
+					<div>
+						<button onclick = 'dec(10 , "Iron Production I")'>-10</button>
+						<button onclick = 'dec(1 , "Iron Production I")'>-</button>
+						<span id = "Iron Production I">0</span>
+						<button onclick = 'inc(1 , "Iron Production I")'>+</button>
+						<button onclick = 'inc(10 , "Iron Production I")'>+10</button>
+					</div>
+				</div>
+				<div class = "element">
+					<img src = "images/res.png" width = 70 height = 70><br>
+					Research Speed I
+					<div>
+						<button onclick = 'dec(10 , "Research Speed I")'>-10</button>
+						<button onclick = 'dec(1 , "Research Speed I")'>-</button>
+						<span id = "Research Speed I">0</span>
+						<button onclick = 'inc(1 , "Research Speed I")'>+</button>
+						<button onclick = 'inc(10 , "Research Speed I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element">
+					<img src = "images/grain.png" width = 70 height = 70><br>
+					Grain Production II
+					<div>
+						<button onclick = 'dec(10 , "Grain Production II")'>-10</button>
+						<button onclick = 'dec(1 , "Grain Production II")'>-</button>
+						<span id = "Grain Production II">0</span>
+						<button onclick = 'inc(1 , "Grain Production II")'>+</button>
+						<button onclick = 'inc(10 , "Grain Production II")'>+10</button>
+					</div>
+				</div>
+				<div class = "element">
+					<img src = "images/gold.png" width = 70 height = 70><br>
+					Gold Production Speed I
+					<div>
+						<button onclick = 'dec(10 , "Gold Production Speed I")'>-10</button>
+						<button onclick = 'dec(1 , "Gold Production Speed I")'>-</button>
+						<span id = "Gold Production Speed I">0</span>
+						<button onclick = 'inc(1 , "Gold Production Speed I")'>+</button>
+						<button onclick = 'inc(10 , "Gold Production Speed I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element">
+					<img src = "images/stone.png" width = 70 height = 70><br>
+					Stone Production II
+					<div>
+						<button onclick = 'dec(10 , "Stone Production II")'>-10</button>
+						<button onclick = 'dec(1 , "Stone Production II")'>-</button>
+						<span id = "Stone Production II">0</span>
+						<button onclick = 'inc(1 , "Stone Production II")'>+</button>
+						<button onclick = 'inc(10 , "Stone Production II")'>+10</button>
+					</div>
+				</div>
+				<div class = "element">
+					<img src = "images/carry.png" width = 70 height = 70><br>
+					Army Carrying Capacity I
+					<div>
+						<button onclick = 'dec(10 , "Army Carrying Capacity I")'>-10</button>
+						<button onclick = 'dec(1 , "Army Carrying Capacity I")'>-</button>
+						<span id = "Army Carrying Capacity I">0</span>
+						<button onclick = 'inc(1 , "Army Carrying Capacity I")'>+</button>
+						<button onclick = 'inc(10 , "Army Carrying Capacity I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element">
+					<img src = "images/iron.png" width = 70 height = 70><br>
+					Iron Production II
+					<div>
+						<button onclick = 'dec(10 , "Iron Production II")'>-10</button>
+						<button onclick = 'dec(1 , "Iron Production II")'>-</button>
+						<span id = "Iron Production II">0</span>
+						<button onclick = 'inc(1 , "Iron Production II")'>+</button>
+						<button onclick = 'inc(10 , "Iron Production II")'>+10</button>
+					</div>
+				</div>
+				<div class = "element">
+					<img src = "images/gath.png" width = 70 height = 70><br>
+					Gathering Speed I
+					<div>
+						<button onclick = 'dec(10 , "Gathering Speed I")'>-10</button>
+						<button onclick = 'dec(1 , "Gathering Speed I")'>-</button>
+						<span id = "Gathering Speed I">0</span>
+						<button onclick = 'inc(1 , "Gathering Speed I")'>+</button>
+						<button onclick = 'inc(10 , "Gathering Speed I")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element">
+					<img src = "images/cons.png" width = 70 height = 70><br>
+					Construction Speed II
+					<div>
+						<button onclick = 'dec(10 , "Construction Speed II")'>-10</button>
+						<button onclick = 'dec(1 , "Construction Speed II")'>-</button>
+						<span id = "Construction Speed II">0</span>
+						<button onclick = 'inc(1 , "Construction Speed II")'>+</button>
+						<button onclick = 'inc(10 , "Construction Speed II")'>+10</button>
+					</div>
+				</div>
+				
+				<div class = "element">
+					<img src = "images/wood.png" width = 70 height = 70><br>
+					Wood Production II
+					<div>
+						<button onclick = 'dec(10 , "Wood Production II")'>-10</button>
+						<button onclick = 'dec(1 , "Wood Production II")'>-</button>
+						<span id = "Wood Production II">0</span>
+						<button onclick = 'inc(1 , "Wood Production II")'>+</button>
+						<button onclick = 'inc(10 , "Wood Production II")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				
+				<div class = "element">
+					<img src = "images/res.png" width = 70 height = 70><br>
+					Research Speed II
+					<div>
+						<button onclick = 'dec(10 , "Research Speed II")'>-10</button>
+						<button onclick = 'dec(1 , "Research Speed II")'>-</button>
+						<span id = "Research Speed II">0</span>
+						<button onclick = 'inc(1 , "Research Speed II")'>+</button>
+						<button onclick = 'inc(10 , "Research Speed II")'>+10</button>
+					</div>
+				</div>
+				<div class = "element">
+					<img src = "images/gold.png" width = 70 height = 70><br>
+					Gold Production Speed II
+					<div>
+						<button onclick = 'dec(10 , "Gold Production Speed II")'>-10</button>
+						<button onclick = 'dec(1 , "Gold Production Speed II")'>-</button>
+						<span id = "Gold Production Speed II">0</span>
+						<button onclick = 'inc(1 , "Gold Production Speed II")'>+</button>
+						<button onclick = 'inc(10 , "Gold Production Speed II")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				
+				<div class = "element">
+					<img src = "images/gath.png" width = 70 height = 70><br>
+					Gathering Speed II
+					<div>
+						<button onclick = 'dec(10 , "Gathering Speed II")'>-10</button>
+						<button onclick = 'dec(1 , "Gathering Speed II")'>-</button>
+						<span id = "Gathering Speed II">0</span>
+						<button onclick = 'inc(1 , "Gathering Speed II")'>+</button>
+						<button onclick = 'inc(10 , "Gathering Speed II")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "empty">
+				
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element">
+					<img src = "images/grain.png" width = 70 height = 70><br>
+					Grain Production III
+					<div>
+						<button onclick = 'dec(10 , "Grain Production III")'>-10</button>
+						<button onclick = 'dec(1 , "Grain Production III")'>-</button>
+						<span id = "Grain Production III">0</span>
+						<button onclick = 'inc(1 , "Grain Production III")'>+</button>
+						<button onclick = 'inc(10 , "Grain Production III")'>+10</button>
+					</div>
+				</div>
+				<div class = "element">
+					<img src = "images/carry.png" width = 70 height = 70><br>
+					Army Carrying Capacity II
+					<div>
+						<button onclick = 'dec(10 , "Army Carrying Capacity II")'>-10</button>
+						<button onclick = 'dec(1 , "Army Carrying Capacity II")'>-</button>
+						<span id = "Army Carrying Capacity II">0</span>
+						<button onclick = 'inc(1 , "Army Carrying Capacity II")'>+</button>
+						<button onclick = 'inc(10 , "Army Carrying Capacity II")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element">
+					<img src = "images/wood.png" width = 70 height = 70><br>
+					Wood Production III
+					<div>
+						<button onclick = 'dec(10 , "Wood Production III")'>-10</button>
+						<button onclick = 'dec(1 , "Wood Production III")'>-</button>
+						<span id = "Wood Production III">0</span>
+						<button onclick = 'inc(1 , "Wood Production III")'>+</button>
+						<button onclick = 'inc(10 , "Wood Production III")'>+10</button>
+					</div>
+				</div>
+				<div class = "element" id = "empty">
+				
+				</div>
+				
+			</div>
+			
+			<div class = "line">
+				<div class = "element">
+					<img src = "images/stone.png" width = 70 height = 70><br>
+					Stone Production III
+					<div>
+						<button onclick = 'dec(10 , "Stone Production III")'>-10</button>
+						<button onclick = 'dec(1 , "Stone Production III")'>-</button>
+						<span id = "Stone Production III">0</span>
+						<button onclick = 'inc(1 , "Stone Production III")'>+</button>
+						<button onclick = 'inc(10 , "Stone Production III")'>+10</button>
+					</div>
+				</div>
+				<div class = "element">
+					<img src = "images/iron.png" width = 70 height = 70><br>
+					Iron Production III
+					<div>
+						<button onclick = 'dec(10 , "Iron Production III")'>-10</button>
+						<button onclick = 'dec(1 , "Iron Production III")'>-</button>
+						<span id = "Iron Production III">0</span>
+						<button onclick = 'inc(1 , "Iron Production III")'>+</button>
+						<button onclick = 'inc(10 , "Iron Production III")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class = "line">
+				<div class = "element" id = "empty">
+				
+				</div>
+				<div class = "element">
+					<img src = "images/gold.png" width = 70 height = 70><br>
+					Gold Production Speed III
+					<div>
+						<button onclick = 'dec(10 , "Gold Production Speed III")'>-10</button>
+						<button onclick = 'dec(1 , "Gold Production Speed III")'>-</button>
+						<span id = "Gold Production Speed III">0</span>
+						<button onclick = 'inc(1 , "Gold Production Speed III")'>+</button>
+						<button onclick = 'inc(10 , "Gold Production Speed III")'>+10</button>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</body>
+</html>
