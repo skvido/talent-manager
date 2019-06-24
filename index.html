@@ -193,9 +193,17 @@
 					if (Number(objects[l].points) > 0){
 						document.getElementById(objects[l].type).innerHTML = Number(number) + objects[l].values[Number(objects[l].points)-1];
 						document.getElementById("Total points").innerHTML = Number(points1) + Number(objects[l].points);
+						if (required_level() > 60){
+							document.getElementById("lvl").innerHTML = required_level() + " (Max is 60)";
+							document.getElementById("lvl").style.color = "red";
+						}else{
+							document.getElementById("lvl").innerHTML = required_level();
+							document.getElementById("lvl").style.color = "white";
+						}
 					}
 				}
 				update_color();
+				required_level();
 			}
 			
 			function dec (n , id){
@@ -249,9 +257,17 @@
 					if (Number(objects[l].points) > 0){
 						document.getElementById(objects[l].type).innerHTML = Number(number) + objects[l].values[Number(objects[l].points)-1];
 						document.getElementById("Total points").innerHTML = Number(points1) + Number(objects[l].points);
+						if (required_level() > 60){
+							document.getElementById("lvl").innerHTML = required_level() + " (Max is 60)";
+							document.getElementById("lvl").style.color = "red";
+						}else{
+							document.getElementById("lvl").innerHTML = required_level();
+							document.getElementById("lvl").style.color = "white";
+						}
 					}
 				}
 				update_color();
+				required_level();
 			}
 			
 			function clear_points(){
@@ -267,12 +283,15 @@
 					document.getElementById(objects[l].name).innerHTML = "<b>0 / " + objects[l].max+"</b>";
 				}
 				document.getElementById("Total points").innerHTML = "0";
+				document.getElementById("lvl").innerHTML = "0";
+				document.getElementById("lvl").style.color = "white";
 				for (l = 0 ; l < objects.length ; l++){
 					number = document.getElementById(objects[l].type).innerHTML;
 					points1 = document.getElementById("Total points").innerHTML;
 					if (Number(objects[l].points) > 0){
 						document.getElementById(objects[l].type).innerHTML = 0;
 						document.getElementById("Total points").innerHTML = 0;
+						document.getElementById("lvl").innerHTML = 0;
 					}
 				}
 				update_color();
@@ -310,6 +329,28 @@
 				document.getElementById("result").style.color = "black";
 				document.getElementById("result").style.backgroundColor = "green";
 				document.getElementById("result").style.visibility = "visible";
+			}
+			
+			function required_level(){
+				var n_points = Number(document.getElementById("Total points").innerHTML);
+				var lvl = 0;
+				var i , done , j;
+				for (i = 0 ; i < 8 ; i++){
+					n_points = n_points - 2;
+					lvl = lvl + 1;
+					if (n_points <= 0){
+						return lvl;
+					}
+				}
+				for (i = 3 ; i < 10 ; i++){
+					for (j = 0 ; j < 10 ; j++){
+						n_points = n_points - i;
+						lvl = lvl + 1;
+						if (n_points <= 0){
+							return lvl;
+						}
+					}
+				}
 			}
 			
 			window.onload = function(){
@@ -644,7 +685,7 @@
 <!--------------------------------------------------------------------------------------------------------------------------------------------->	
 		<div class = "block" id = "Summary" style = "padding-bottom:5px;width:28%;position:fixed;left:35.5%;top:80px;">
 			<br>
-			<div>Total points used: <span id = "Total points" value = 0>0</span>&nbsp;&nbsp;<button onclick = 'clear_points()'>Clear</button></div>
+			<div>Total points used: <span id = "Total points" value = 0>0</span>&nbsp;&nbsp;<button onclick = 'clear_points()'>Clear</button><br>Required level: <span id = "lvl">0</span></div>
 			<br>
 			<table align = center style = "text-align:left;width:95%; top:0%;border:1px solid black;">
 				<tr style = "text-align:center;"><th colspan =3 > Army</th></tr>
