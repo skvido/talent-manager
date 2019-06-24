@@ -283,14 +283,33 @@
 				for (i = 0 ; i < objects.length ; i++){
 					if (objects[i].req == null){
 						document.getElementById(objects[i].name).style.color = "#1DF106";
+						if(objects[i].points == 0){
+							document.getElementById(objects[i].name).style.color = "#FFD60F";
+						}
 					}else{
 						if (objects[find(objects[i].req)].points >= objects[i].req_n){
 							document.getElementById(objects[i].name).style.color = "#1DF106";
+							if(objects[i].points == 0){
+								document.getElementById(objects[i].name).style.color = "#FFD60F";
+							}
 						}else{
 							document.getElementById(objects[i].name).style.color = "red";
 						}
 					}
 				}
+			}
+			
+			function max_stats(type){
+			var i;
+				for (i = 0 ; i < objects.length ; i++){
+					if (objects[i].type.localeCompare(type) == 0){
+						inc(50, objects[i].name);
+					}
+				}
+				document.getElementById("result").innerHTML = type + " is now at maximum value";
+				document.getElementById("result").style.color = "black";
+				document.getElementById("result").style.backgroundColor = "green";
+				document.getElementById("result").style.visibility = "visible";
 			}
 			
 			window.onload = function(){
@@ -301,7 +320,7 @@
 					document.getElementById(objects[m].name).innerHTML = "<b>"+objects[m].points + " / " + objects[m].max+"</b>";
 					document.getElementById(objects[m].name).style.backgroundColor = "rgba(0,0,0,0.9)";
 					if (objects[m].req == null){
-						document.getElementById(objects[m].name).style.color = "#1DF106";
+						document.getElementById(objects[m].name).style.color = "#FFD60F";
 					}else{
 						document.getElementById(objects[m].name).style.color = "red";
 					}	
@@ -628,28 +647,28 @@
 			<div>Total points used: <span id = "Total points" value = 0>0</span>&nbsp;&nbsp;<button onclick = 'clear_points()'>Clear</button></div>
 			<br>
 			<table align = center style = "text-align:left;width:95%; top:0%;border:1px solid black;">
-				<tr style = "text-align:center;"><th colspan =2 > Army</th></tr>
-				<tr style = "color:black"><td>Army Attack: </td><td style = "width:25%"><span id = "Army Attack" value = 0>0</span>%</td></tr>
-				<tr><td>Army Defense: </td><td><span id = "Army Defense" value = 0>0</span>%</td></tr>
-				<tr style = "color:black"><td>Army Health: </td><td><span id = "Army Health" value = 0>0</span>%</td></tr>
-				<tr><td>Infantry Attack: </td><td><span id = "Infantry Attack" value = 0>0</span>%</td></tr>
-				<tr style = "color:black"><td>Cavalry Attack: </td><td><span id = "Cavalry Attack" value = 0>0</span>%</td></tr>
-				<tr><td>Spearmen Attack: </td><td><span id = "Spearmen Attack" value = 0>0</span>%</td></tr>
-				<tr style = "color:black"><td>Bowmen Attack: </td><td><span id = "Bowmen Attack" value = 0>0</span>%</td></tr>
-				<tr><td>Fortification Attack: </td><td><span id = "Fortification Attack" value = 0>0</span>%</td></tr>
-				<tr style = "color:black"><td>Training Speed: </td><td><span id = "Training Speed" value = 0>0</span>%</td></tr>
-				<tr><td>Fortification Construction: </td><td><span id = "Fortification Construction" value = 0>0</span>%</td></tr>
-				<tr style = "text-align:center;"><th colspan =2 > </th></tr>
-				<tr style = "text-align:center;"><th colspan =2 > Economy</th></tr>
-				<tr style = "color:black"><td>Wood Production: </td><td><span id = "Wood Production" value = 0>0</span>%</td></tr>
-				<tr><td>Stone Production: </td><td><span id = "Stone Production" value = 0>0</span>%</td></tr>
-				<tr style = "color:black"><td>Iron Production: </td><td><span id = "Iron Production" value = 0>0</span>%</td></tr>
-				<tr><td>Grain Production: </td><td> <span id = "Grain Production" value = 0>0</span>%</td></tr>
-				<tr style = "color:black"><td>Gold Production: </td><td><span id = "Gold Production" value = 0>0</span>%</td></tr>
-				<tr><td>Construction Speed: </td><td><span id = "Construction Speed" value = 0>0</span>%</td></tr>
-				<tr style = "color:black"><td>Research Speed: </td><td><span id = "Research Speed" value = 0>0</span>%</td></tr>
-				<tr><td>Army Carrying Capacity: </td><td><span id = "Army Carrying Capacity" value = 0>0</span>%</td></tr>
-				<tr style = "color:black"><td>Gathering Speed: </td><td><span id = "Gathering Speed" value = 0>0</span>%</td></tr>
+				<tr style = "text-align:center;"><th colspan =3 > Army</th></tr>
+				<tr style = "color:black"><td>Army Attack: </td><td style = "width:60px;"><span id = "Army Attack" value = 0 >0</span>%</td><td style = "width: 41px;"> <button onclick = 'max_stats("Army Attack")'>Max</button></td></tr>
+				<tr><td>Army Defense: </td><td><span id = "Army Defense" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Army Defense")'>Max</button></td></tr>
+				<tr style = "color:black"><td>Army Health: </td><td><span id = "Army Health" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Army Health")'>Max</button></td></tr>
+				<tr><td>Infantry Attack: </td><td><span id = "Infantry Attack" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Infantry Attack")'>Max</button></td></tr>
+				<tr style = "color:black"><td>Cavalry Attack: </td><td><span id = "Cavalry Attack" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Cavalry Attack")'>Max</button></td></tr>
+				<tr><td>Spearmen Attack: </td><td><span id = "Spearmen Attack" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Spearmen Attack")'>Max</button></td></tr>
+				<tr style = "color:black"><td>Bowmen Attack: </td><td><span id = "Bowmen Attack" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Bowmen Attack")'>Max</button></td></tr>
+				<tr><td>Fortification Attack: </td><td><span id = "Fortification Attack" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Fortification Attack")'>Max</button></td></tr>
+				<tr style = "color:black"><td>Training Speed: </td><td><span id = "Training Speed" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Training Speed")'>Max</button></td></tr>
+				<tr><td>Fortification Construction: </td><td><span id = "Fortification Construction" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Fortification Construction")'>Max</button></td></tr>
+				<tr style = "text-align:center;"><th colspan =3 > </th></tr>
+				<tr style = "text-align:center;"><th colspan =3 > Economy</th></tr>
+				<tr style = "color:black"><td>Wood Production: </td><td><span id = "Wood Production" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Wood Production")'>Max</button></td></tr>
+				<tr><td>Stone Production: </td><td><span id = "Stone Production" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Stone Production")'>Max</button></td></tr>
+				<tr style = "color:black"><td>Iron Production: </td><td><span id = "Iron Production" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Iron Production")'>Max</button></td></tr>
+				<tr><td>Grain Production: </td><td> <span id = "Grain Production" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Grain Production")'>Max</button></td></tr>
+				<tr style = "color:black"><td>Gold Production: </td><td><span id = "Gold Production" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Gold Production")'>Max</button></td></tr>
+				<tr><td>Construction Speed: </td><td><span id = "Construction Speed" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Construction Speed")'>Max</button></td></tr>
+				<tr style = "color:black"><td>Research Speed: </td><td><span id = "Research Speed" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Research Speed")'>Max</button></td></tr>
+				<tr><td>Army Carrying Capacity: </td><td><span id = "Army Carrying Capacity" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Army Carrying Capacity")'>Max</button></td></tr>
+				<tr style = "color:black"><td>Gathering Speed: </td><td><span id = "Gathering Speed" value = 0>0</span>% </td><td> <button onclick = 'max_stats("Gathering Speed")'>Max</button></td></tr>
 			</table>
 			<div id = "cp"> <span style = "background-color: rgba(0,0,0,0.8);">Created by K6 [FoF]Skvido</span> </div>
 		</div>
