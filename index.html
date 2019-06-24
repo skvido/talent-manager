@@ -191,7 +191,7 @@
 					number = document.getElementById(objects[l].type).innerHTML;
 					points1 = document.getElementById("Total points").innerHTML;
 					if (Number(objects[l].points) > 0){
-						document.getElementById(objects[l].type).innerHTML = Number(number) + objects[l].values[Number(objects[l].points)-1];
+						document.getElementById(objects[l].type).innerHTML = (Number(number) + objects[l].values[Number(objects[l].points)-1]).toFixed(2);
 						document.getElementById("Total points").innerHTML = Number(points1) + Number(objects[l].points);
 						if (required_level() > 60){
 							document.getElementById("lvl").innerHTML = required_level() + " (Max is 60)";
@@ -255,7 +255,7 @@
 					number = document.getElementById(objects[l].type).innerHTML;
 					points1 = document.getElementById("Total points").innerHTML;
 					if (Number(objects[l].points) > 0){
-						document.getElementById(objects[l].type).innerHTML = Number(number) + objects[l].values[Number(objects[l].points)-1];
+						document.getElementById(objects[l].type).innerHTML = (Number(number) + objects[l].values[Number(objects[l].points)-1]).toFixed(2);
 						document.getElementById("Total points").innerHTML = Number(points1) + Number(objects[l].points);
 						if (required_level() > 60){
 							document.getElementById("lvl").innerHTML = required_level() + " (Max is 60)";
@@ -342,7 +342,7 @@
 						return lvl;
 					}
 				}
-				for (i = 3 ; i < 10 ; i++){
+				for (i = 3 ; i < 15 ; i++){
 					for (j = 0 ; j < 10 ; j++){
 						n_points = n_points - i;
 						lvl = lvl + 1;
